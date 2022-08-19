@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'couse-project';
+  loadedFeature = 'recipe';
+
+  onNavigate(getFeature: string) {
+    this.loadedFeature = getFeature;
+  }
 }
