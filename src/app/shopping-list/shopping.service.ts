@@ -24,6 +24,6 @@ export class ShoppingService {
         //     this.addIngredient(ingredient);
         // }
         this.ingredients.push(...ingredients);
-        this.ingredientChanged.emit(ingredients.slice());
+        this.ingredientChanged.emit(this.ingredients.slice());
     }
 }
