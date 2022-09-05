@@ -4,7 +4,7 @@
         <hr>
         <ul class="list-group">
             <a class="list-group-item d-flex justify-content-between align-items-center" style="cursor: pointer;"
-                *ngFor="let ingredient of ingredients">
+                *ngFor="let ingredient of ingredients; let i = index" (click)="onEditItem(i)">
                 {{ingredient.name}}
                 <span class="badge badge-success badge-pill" style="background-color: rgba(0, 21, 255, 0.84);">
                     {{ingredient.amount}}
