@@ -12,7 +12,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
   /* @ViewChild('nameInput', { static: true }) nameInputRef: ElementRef;
   @ViewChild('amountInput', { static: true }) amountInputRef: ElementRef; */
-  @ViewChild('f', { static: true }) shoppingForm: NgForm;
+  @ViewChild('f', { static: false }) shoppingForm: NgForm;
 
   constructor(private shoppingService: ShoppingService) { }
 
@@ -38,9 +38,11 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   onAddItem(form: NgForm) {
     const value = form.value;
     console.log(form.value);  //{amount:_ , name:'_'}
-    /* const ingName = this.nameInputRef.nativeElement.value;
-    const ingAmout = this.amountInputRef.nativeElement.value; */
 
+    /* const ingName = this.nameInputRef.nativeElement.value;
+    const ingAmount = this.amountInputRef.nativeElement.value;
+    const newIngredient = new Ingredient(ingName, ingAmount);
+    */
     const newIngredient = new Ingredient(value.name, value.amount);
     this.shoppingService.addIngredient(newIngredient);
   }
