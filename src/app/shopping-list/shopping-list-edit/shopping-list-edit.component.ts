@@ -39,12 +39,17 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     const value = form.value;
     console.log(form.value);  //{amount:_ , name:'_'}
 
-    /* const ingName = this.nameInputRef.nativeElement.value;
-    const ingAmount = this.amountInputRef.nativeElement.value;
-    const newIngredient = new Ingredient(ingName, ingAmount);
-    */
     const newIngredient = new Ingredient(value.name, value.amount);
-    this.shoppingService.addIngredient(newIngredient);
+
+    // For Update or Add button logic
+    if (this.editMode) {
+      this.shoppingService.updateIngredient(this.editedIndexItem, newIngredient);
+      form.reset();
+      this.editMode = false;
+    } else {
+      this.shoppingService.addIngredient(newIngredient);
+      form.reset();
+    }
   }
 
   ngOnDestroy(): void {
