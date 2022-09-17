@@ -1,3 +1,4 @@
+import { formatCurrency } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -35,6 +36,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     );
   }
 
+  /* On clicking Update/Add button */
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log(form.value);  //{amount:_ , name:'_'}
@@ -50,6 +52,12 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     }
     this.editMode = false;
     form.reset();
+  }
+
+  /* On clicking clear button */
+  onClear() {
+    this.shoppingForm.reset();
+    this.editMode = false;
   }
 
   ngOnDestroy(): void {
