@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes.model';
 
@@ -14,7 +14,7 @@ export class RecipeEditComponent implements OnInit {
   editMode: boolean = false;
   recipeForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private recipeService: RecipeService) { }
+  constructor(private route: ActivatedRoute, private recipeService: RecipeService, private router: Router) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(
@@ -78,6 +78,8 @@ export class RecipeEditComponent implements OnInit {
       //add recipe
       this.recipeService.addRecipe(newRecipe);
     }
+    // for navigating away after submitting the form
+    this.onCancel();
   }
 
   /* Adding new form group when New button is clicked */
@@ -89,4 +91,10 @@ export class RecipeEditComponent implements OnInit {
       })
     )
   }
+
+  /* Navigate away when clicked on cancel */
+  onCancel() {
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
 }
