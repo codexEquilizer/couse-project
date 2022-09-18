@@ -95,6 +95,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     )
   }
 
+  /* Clearing all the ingredients at one click in the ingredient list */
+  onClearIngredients() {
+    (<FormArray>this.recipeForm.get('ingredients')).clear();
+  }
+
   /* Navigate away when clicked on cancel */
   onCancel() {
     this.router.navigate(['../'], { relativeTo: this.route });
