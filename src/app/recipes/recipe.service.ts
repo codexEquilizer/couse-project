@@ -6,8 +6,9 @@ import { Recipe } from "./recipes.model";
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
+    recipeChanged = new Subject<Recipe[]>();
 
-    private recipe: Recipe[] = [
+    private recipes: Recipe[] = [
         new Recipe('Malai Kofta',
             'Recipe description 1',
             'https://www.bibbyskitchenat36.com/wp-content/uploads/2021/01/DSC_9104-1.jpg',
@@ -29,14 +30,24 @@ export class RecipeService {
     constructor(private shoppingService: ShoppingService) { }
 
     getRecipes() {
-        return this.recipe.slice();
+        return this.recipes.slice();
     }
 
     getRecipe(id: number) {
-        return this.recipe[id];
+        return this.recipes[id];
     }
 
     addIngredientsToShoppingList(ingredients: Ingredient[]) {
         this.shoppingService.addIngredients(ingredients);
+    }
+
+    addRecipe(recipe: Recipe) {
+        this.recipes.push(recipe);
+        this.recipeChanged.next(this.recipes.slice());
+    }
+
+    updateRecipe(index: number, newRecipe: Recipe) {
+        this.recipes[index] = newRecipe;
+        this.recipeChanged.next(this.recipes.slice());
     }
 }
