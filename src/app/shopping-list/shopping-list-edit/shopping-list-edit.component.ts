@@ -37,7 +37,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   /* On clicking Update/Add button */
-  onSubmit(form: NgForm) {
+  onAddItem(form: NgForm) {
     const value = form.value;
     console.log(form.value);  //{amount:_ , name:'_'}
 
