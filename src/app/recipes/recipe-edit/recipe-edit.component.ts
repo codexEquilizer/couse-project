@@ -25,7 +25,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         this.id = +params['id'];
         this.editMode = params['id'] != null;
         // console.log(this.editMode);
-        this.initForm();
+        this.initForm();    // Loading the initForm method whenever the route params changes
       }
     )
     // console.log(this.id);
