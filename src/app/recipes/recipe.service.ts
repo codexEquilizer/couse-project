@@ -8,7 +8,7 @@ import { Recipe } from "./recipes.model";
 export class RecipeService {
     recipeChanged = new Subject<Recipe[]>();
 
-    private recipes: Recipe[] = [
+    /* private recipes: Recipe[] = [
         new Recipe('Malai Kofta',
             'Recipe description 1',
             'https://www.bibbyskitchenat36.com/wp-content/uploads/2021/01/DSC_9104-1.jpg',
@@ -24,10 +24,17 @@ export class RecipeService {
                 new Ingredient('Noodles', 2),
                 new Ingredient('Capsicunms', 10)
             ])
-    ];
+    ]; */
+    private recipes: Recipe[] = [];
 
     //Injecting shoppingService to the RecipeService
     constructor(private shoppingService: ShoppingService) { }
+
+    // This method will recipes the recipes by the fetchRecipes() from the dataStorageService
+    setRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
+        this.recipeChanged.next(this.recipes.slice());
+    }
 
     getRecipes() {
         return this.recipes.slice();
