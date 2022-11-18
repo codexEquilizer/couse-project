@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "./auth.service";
 
 @Component({
@@ -9,6 +9,8 @@ import { AuthService } from "./auth.service";
 export class AuthComponent implements OnInit {
     isLoginMode: boolean = true;
     loginForm: FormGroup;
+    email: string;
+    password: string;
 
     constructor(private authService: AuthService) { }
 
@@ -27,12 +29,28 @@ export class AuthComponent implements OnInit {
         });
     }
 
-    fetchLogin() {
-        // this.authService
-    }
-
     onSubmit() {
-        console.log(this.loginForm.value);
-        this.fetchLogin();
+        // console.log(this.loginForm.value);
+        if (!this.loginForm) {
+            return;
+        }
+        this.email = this.loginForm.value.form_login_id.loginId;
+        this.password = this.loginForm.value.form_password.password;
+
+        if (this.isLoginMode) {
+            //..login login
+        } else {
+            //signup logic
+            this.authService.signup(this.email, this.password).subscribe(
+                resData => {
+                    console.log(resData);
+                },
+                error => {
+                    console.log(error);
+                }
+            )
+        }
+
+        this.loginForm.reset();
     }
 }
