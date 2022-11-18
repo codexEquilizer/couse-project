@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
+import { AuthService } from "./auth.service";
 
 @Component({
     selector: 'app-auth',
@@ -8,6 +9,8 @@ import { FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
 export class AuthComponent implements OnInit {
     isLoginMode: boolean = true;
     loginForm: FormGroup;
+
+    constructor(private authService: AuthService) { }
 
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
@@ -24,7 +27,12 @@ export class AuthComponent implements OnInit {
         });
     }
 
+    fetchLogin() {
+        // this.authService
+    }
+
     onSubmit() {
         console.log(this.loginForm.value);
+        this.fetchLogin();
     }
 }
