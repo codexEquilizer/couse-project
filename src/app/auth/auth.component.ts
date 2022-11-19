@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "./auth.service";
+import { Observable } from "rxjs";
+import { AuthResponseData, AuthService } from "./auth.service";
 
 @Component({
     selector: 'app-auth',
@@ -41,23 +42,30 @@ export class AuthComponent implements OnInit {
         this.email = this.loginForm.value.form_login_id.loginId;
         this.password = this.loginForm.value.form_password.password;
 
+        // Adding this observable to avoid repeating the same logic code for both login and signup
+        let authObs: Observable<AuthResponseData>;
+
         this.isLoading = true;
         if (this.isLoginMode) {
             //..login login
+            authObs = this.authService.login(this.email, this.password);
         } else {
             //signup logic
-            this.authService.signup(this.email, this.password).subscribe(
-                resData => {
-                    console.log(resData);
-                    this.isLoading = false;
-                },
-                errorMessage => {
-                    console.log(errorMessage);
-                    this.error = errorMessage;
-                    this.isLoading = false;
-                }
-            )
+            authObs = this.authService.signup(this.email, this.password);
         }
+
+        //This holds the logic of subscribing to the logic of login/signup and giving the respective response or errorMessage.
+        authObs.subscribe(
+            resData => {
+                console.log(resData);
+                this.isLoading = false;
+            },
+            errorMessage => {
+                console.log(errorMessage);
+                this.error = errorMessage;
+                this.isLoading = false;
+            }
+        )
 
         this.loginForm.reset();
     }
