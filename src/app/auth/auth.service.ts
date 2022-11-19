@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, throwError } from "rxjs";
+import { catchError, Subject, tap, throwError } from "rxjs";
+import { User } from "./user.model";
 
 export interface AuthResponseData {
     idToken: string;
@@ -13,6 +14,7 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    user = new Subject<User>();
 
     constructor(private http: HttpClient) { }
 
@@ -22,8 +24,11 @@ export class AuthService {
             password: pwdValue,
             returnSecureToken: true
         }).pipe(
-            catchError(this.handleError)
-        )
+            catchError(this.handleError),
+            tap(resData => {
+                this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+            })
+        );
     }
 
     login(emailValue: string, pwdValue: string) {
@@ -32,11 +37,23 @@ export class AuthService {
             password: pwdValue,
             returnSecureToken: true
         }).pipe(
-            catchError(this.handleError)
-        )
+            catchError(this.handleError),
+            tap(resData => {
+                this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn)
+            })
+        );
     }
 
-    // Handling common Error handling Logic for both login and signup
+    /* Handling the authentication of the User data  */
+    private handleAuthentication(email: string, id: string, token: string, expirseIn: number) {
+        //generating an expiration date
+        const expirationDate = new Date(new Date().getTime() + (expirseIn * 1000));
+        const userData = new User(email, id, token, expirationDate);
+        return this.user.next(userData);
+    }
+
+
+    /* Handling common Error handling Logic for both login and signup */
     private handleError(errorRes: HttpErrorResponse) {
         let errorMessage = 'An unknown error occured!';
         if (!errorRes.error || !errorRes.error.error) {
