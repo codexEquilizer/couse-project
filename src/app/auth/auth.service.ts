@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { catchError, throwError } from "rxjs";
 
 interface AuthResponseData {
     idToken: string,
@@ -19,6 +20,19 @@ export class AuthService {
             email: emailValue,
             password: pwdValue,
             returnSecureToken: true
-        });
+        }).pipe(
+            catchError(errorRes => {
+                let errorMessage = 'An unknown error occured!';
+                if (!errorRes.error || !errorRes.error.error) {
+                    const err = new Error(errorMessage); // since throwError(errorMessage) is deprecated, we are using this technique but the process is same!
+                    return throwError(() => err);
+                }
+                switch (errorRes.error.error.message) {
+                    case 'EMAIL_EXISTS':
+                        errorMessage = 'This email exists already!';
+                }
+                return throwError(() => errorMessage);
+            })
+        )
     }
 }

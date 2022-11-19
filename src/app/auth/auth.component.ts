@@ -8,6 +8,9 @@ import { AuthService } from "./auth.service";
 })
 export class AuthComponent implements OnInit {
     isLoginMode: boolean = true;
+    isLoading: boolean;
+    error: string = null;
+
     loginForm: FormGroup;
     email: string;
     password: string;
@@ -31,12 +34,14 @@ export class AuthComponent implements OnInit {
 
     onSubmit() {
         // console.log(this.loginForm.value);
+        // Guard clause
         if (!this.loginForm) {
             return;
         }
         this.email = this.loginForm.value.form_login_id.loginId;
         this.password = this.loginForm.value.form_password.password;
 
+        this.isLoading = true;
         if (this.isLoginMode) {
             //..login login
         } else {
@@ -44,9 +49,12 @@ export class AuthComponent implements OnInit {
             this.authService.signup(this.email, this.password).subscribe(
                 resData => {
                     console.log(resData);
+                    this.isLoading = false;
                 },
-                error => {
-                    console.log(error);
+                errorMessage => {
+                    console.log(errorMessage);
+                    this.error = errorMessage;
+                    this.isLoading = false;
                 }
             )
         }
