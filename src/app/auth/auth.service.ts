@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
 
@@ -22,18 +22,7 @@ export class AuthService {
             password: pwdValue,
             returnSecureToken: true
         }).pipe(
-            catchError(errorRes => {
-                let errorMessage = 'An unknown error occured!';
-                if (!errorRes.error || !errorRes.error.error) {
-                    const err = new Error(errorMessage); // since throwError(errorMessage) is deprecated, we are using this technique but the process is same!
-                    return throwError(() => err);
-                }
-                switch (errorRes.error.error.message) {
-                    case 'EMAIL_EXISTS':
-                        errorMessage = 'This email exists already!';
-                }
-                return throwError(() => errorMessage);
-            })
+            catchError(this.handleError)
         )
     }
 
@@ -42,6 +31,27 @@ export class AuthService {
             email: emailValue,
             password: pwdValue,
             returnSecureToken: true
-        });
+        }).pipe(
+            catchError(this.handleError)
+        )
+    }
+
+    // Handling common Error handling Logic for both login and signup
+    private handleError(errorRes: HttpErrorResponse) {
+        let errorMessage = 'An unknown error occured!';
+        if (!errorRes.error || !errorRes.error.error) {
+            return throwError(errorMessage);
+        }
+        switch (errorRes.error.error.message) {
+            case 'EMAIL_EXISTS':
+                errorMessage = 'This email exists already!';
+                break;
+            case 'EMAIL_NOT_FOUND':
+                errorMessage = 'This email does not exist!'
+                break;
+            case 'INVALID_PASSWORD':
+                errorMessage = 'This password is not correct!'
+        }
+        return throwError(errorMessage);
     }
 }
