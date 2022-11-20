@@ -8,7 +8,7 @@ import { Recipe } from "../recipes/recipes.model";
 @Injectable({ providedIn: "root" })
 export class DataStorageService {
 
-    constructor(private http: HttpClient, private recipeService: RecipeService, private authService: AuthService) { }
+    constructor(private http: HttpClient, private recipeService: RecipeService) { }
 
     //HTTP request
     saveRecipes() {
@@ -21,31 +21,8 @@ export class DataStorageService {
 
     fetchRecipes() {
 
-        /*
         //http response
-        return this.http.get<Recipe[]>('https://ng-course-recipebook-101cd-default-rtdb.firebaseio.com/recipes.json')
-            .pipe(
-                map(recipes => {
-                    return recipes.map(recipe => {
-                        return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] }
-                    })
-                }),
-                tap(recipes => {
-                    console.log('Setting recipe after fetching: ');
-                    this.recipeService.setRecipes(recipes);
-                })
-            )
-        */
-
-        //take() rxjs operator Takes the first count values from the source, then completes.
-        return this.authService.user.pipe(
-            take(1),
-            exhaustMap(user => { // takes the response from the first observable and then gives a new observable which we have inside the exhaustMap().
-                //http response
-                return this.http.get<Recipe[]>('https://ng-course-recipebook-101cd-default-rtdb.firebaseio.com/recipes.json', {
-                    params: new HttpParams().set('auth', user.token)
-                })
-            }),
+        return this.http.get<Recipe[]>('https://ng-course-recipebook-101cd-default-rtdb.firebaseio.com/recipes.json').pipe(
             map(recipes => {
                 return recipes.map(recipe => {
                     return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] }
