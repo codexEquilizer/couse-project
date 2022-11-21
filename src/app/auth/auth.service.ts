@@ -15,6 +15,7 @@ export interface AuthResponseData {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     user = new BehaviorSubject<User>(null); // Using BehaviorSubject to get the immediate access to the previously emitted value
+    tokenExpirationTimer: any;
 
     constructor(private http: HttpClient) { }
 
@@ -60,6 +61,9 @@ export class AuthService {
 
         if (loadedUser.token) {
             this.user.next(loadedUser);
+            // auto-logout when the user logs in
+            const expirationDuration = new Date(localUserData._tokenExpiringDate).getTime() - new Date().getTime();
+            this.autoLogout(expirationDuration);
         }
     }
 
@@ -69,6 +73,8 @@ export class AuthService {
         const expirationDate = new Date(new Date().getTime() + (expirseIn * 1000));
         const userData = new User(email, id, token, expirationDate);
         this.user.next(userData);
+        // auto-logout when the user logs in
+        this.autoLogout(expirseIn * 1000);  // converting sec to milisec
 
         // Adding userData local storage
         localStorage.setItem('userData', JSON.stringify(userData));
@@ -96,5 +102,20 @@ export class AuthService {
 
     logout() {
         this.user.next(null);
+        // Clearing the local storage when user logout
+        localStorage.removeItem('userData');
+
+        //Clearing the token expiration timer when we logout manually
+        if (this.tokenExpirationTimer) {
+            clearTimeout(this.tokenExpirationTimer);
+        }
+        this.tokenExpirationTimer = null;
+    }
+
+    /* Auto-Logout functionality */
+    autoLogout(expirationDuration: number) {
+        this.tokenExpirationTimer = setTimeout(() => {
+            this.logout();
+        }, expirationDuration);
     }
 }
