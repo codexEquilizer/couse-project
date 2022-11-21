@@ -44,12 +44,34 @@ export class AuthService {
         );
     }
 
+    /* Auto-Login functionality */
+    autoLogin() {
+        const localUserData: {
+            email: string,
+            id: string,
+            _token: string,
+            _tokenExpiringDate: string
+        } = JSON.parse(localStorage.getItem('userData'));
+        console.log('Data from Local Storage: ', localUserData);
+        if (!localUserData) {
+            return;
+        }
+        const loadedUser = new User(localUserData.email, localUserData.id, localUserData._token, new Date(localUserData._tokenExpiringDate));
+
+        if (loadedUser.token) {
+            this.user.next(loadedUser);
+        }
+    }
+
     /* Handling the authentication of the User data  */
     private handleAuthentication(email: string, id: string, token: string, expirseIn: number) {
         //generating an expiration date
         const expirationDate = new Date(new Date().getTime() + (expirseIn * 1000));
         const userData = new User(email, id, token, expirationDate);
-        return this.user.next(userData);
+        this.user.next(userData);
+
+        // Adding userData local storage
+        localStorage.setItem('userData', JSON.stringify(userData));
     }
 
 
