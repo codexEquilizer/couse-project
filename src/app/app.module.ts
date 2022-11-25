@@ -9,21 +9,16 @@ import { HeaderComponent } from './header/header.component';
 import { ShoppingService } from './shopping-list/shopping.service';
 import { RecipeService } from './recipes/recipe.service';
 import { AuthComponent } from './auth/auth.component';
-import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptor } from './auth/auth-interceptor.service';
-import { AppAlertComponent } from './shared/alert/app-alert/app-alert.component';
 import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
-import { DropdownDirective } from './shared/dropdown.directive';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    AuthComponent,
-    LoadingSpinnerComponent,
-    AppAlertComponent,
-    // DropdownDirective
+    AuthComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +27,8 @@ import { DropdownDirective } from './shared/dropdown.directive';
     HttpClientModule,
     AppRoutingModule,
     RecipesModule,
-    ShoppingListModule
+    ShoppingListModule,
+    SharedModule
   ],
   providers: [ShoppingService, RecipeService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
