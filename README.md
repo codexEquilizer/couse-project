@@ -1,3 +1,5 @@
+URL for this project:: https://ng-course-recipebook-101cd.web.app/
+
 # CouseProject
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.1.
