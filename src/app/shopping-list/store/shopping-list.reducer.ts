@@ -1,5 +1,6 @@
 import { Action } from "@ngrx/store";
-import { Ingredient } from "../shared/ingredient.model";
+import { Ingredient } from "../../shared/ingredient.model";
+import { ADD_INGREDIENT } from "./shopping-list.action";
 
 /* initial state  (Note state should be a JS object)*/
 const initialState = {
@@ -13,7 +14,7 @@ const initialState = {
 // only for the first time when ngrx will initialize the state then it will be our initial state. So in the parameter I have written state=initialState such that if the value of state in null then it will take the initialState value by default
 export function shoppingListReducer(state = initialState, action: Action) {
     switch (action.type) {
-        case 'ADD_INGREDIENT':
+        case ADD_INGREDIENT:
             //need to return a new state
             //NOTE: State changes with ngrx will always have to be immutable. So we do not touch the current/existing state
             return {
