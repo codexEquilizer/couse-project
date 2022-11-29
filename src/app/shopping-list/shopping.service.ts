@@ -19,12 +19,12 @@ export class ShoppingService {
         return this.ingredients[index];
     }
 
-    /* Not in use as it has now been replaced by ngrx state */
+    /* ...Not in use as it has now been replaced by ngrx state...
 
-    // addIngredient(ingredient: Ingredient) {
-    //     this.ingredients.push(ingredient);
-    //     this.ingredientChanged.next(this.ingredients.slice());
-    // }
+    addIngredient(ingredient: Ingredient) {
+        this.ingredients.push(ingredient);
+        this.ingredientChanged.next(this.ingredients.slice());
+    }
 
     addIngredients(ingredients: Ingredient[]) {
         // for (let ingredient of ingredients) {
@@ -33,6 +33,8 @@ export class ShoppingService {
         this.ingredients.push(...ingredients);
         this.ingredientChanged.next(this.ingredients.slice());
     }
+    
+    */
 
     /* updating the ingredient */
     updateIngredient(index: number, newIngredient: Ingredient) {
