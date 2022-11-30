@@ -34,9 +34,8 @@ export class ShoppingService {
         this.ingredientChanged.next(this.ingredients.slice());
     }
     
-    */
 
-    /* updating the ingredient */
+    // updating the ingredient
     updateIngredient(index: number, newIngredient: Ingredient) {
         this.ingredients[index] = newIngredient;
         this.ingredientChanged.next(this.ingredients.slice());
@@ -46,4 +45,5 @@ export class ShoppingService {
         this.ingredients.splice(index, 1);
         this.ingredientChanged.next(this.ingredients.slice());
     }
+    */
 }

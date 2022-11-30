@@ -20,11 +20,35 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
                 ...state,   // copy of the old/current state
                 ingredients: [...state.ingredients, action.payload]
             }
+
         case ShoppingListActions.ADD_INGREDIENTS:
             return {
                 ...state,   // copy of the old state
                 ingredients: [...state.ingredients, ...action.payload]
             }
+
+        case ShoppingListActions.UPDATE_INGREDIENT:
+            // {am1 and 1, am2 and 2}
+            const ingredient = state.ingredients[action.payload.index]; //am2 and 2
+            const updatedIngredient = {
+                ...ingredient,// am2, 2
+                ...action.payload.ingredient
+            }
+            const updatedIngredients = [...state.ingredients]; //copy of old state ingredient
+            updatedIngredients[action.payload.index] = updatedIngredient; //overwriting the existing element of the copy of old ingredient array with new ingredient element
+            return {
+                ...state,
+                ingredients: updatedIngredients
+            }
+
+        case ShoppingListActions.DELETE_INGREDIENT:
+            return {
+                ...state,
+                ingredients: state.ingredients.filter((ig, igIndex) => {
+                    return igIndex !== action.payload;
+                })
+            }
+
         default:
             return state;
     }

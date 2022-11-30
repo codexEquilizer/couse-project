@@ -49,7 +49,8 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
     // For Update or Add button logic
     if (this.editMode) {
-      this.shoppingService.updateIngredient(this.editedIndexItem, newIngredient);
+      // this.shoppingService.updateIngredient(this.editedIndexItem, newIngredient);
+      this.store.dispatch(new ShoppingListActions.UpdateIngredient({ index: this.editedIndexItem, ingredient: newIngredient }));
     } else {
       this.store.dispatch(new ShoppingListActions.AddIngredient(newIngredient));
       // this.shoppingService.addIngredient(newIngredient);
@@ -66,7 +67,8 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
   /* On clicking delete button */
   onDelete() {
-    this.shoppingService.deleteIngredient(this.editedIndexItem);
+    // this.shoppingService.deleteIngredient(this.editedIndexItem);
+    this.store.dispatch(new ShoppingListActions.DeleteIngredient(this.editedIndexItem));
     this.onClear();
   }
 
