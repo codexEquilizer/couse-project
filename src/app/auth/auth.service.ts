@@ -1,8 +1,11 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, tap, throwError } from "rxjs";
+import { BehaviorSubject, catchError, Observable, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 import { environment } from "../../environments/environment";
+import { Store } from "@ngrx/store";
+import * as fromApp from '../global-Store/app.reducer';
+import * as AuthActions from './store/auth.action';
 
 export interface AuthResponseData {
     idToken: string;
@@ -18,7 +21,8 @@ export class AuthService {
     user = new BehaviorSubject<User>(null); // Using BehaviorSubject to get the immediate access to the previously emitted value
     tokenExpirationTimer: any;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+        private store: Store<fromApp.AppState>) { }
 
     signup(emailValue: string, pwdValue: string) {
         return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIkey, {
@@ -61,7 +65,9 @@ export class AuthService {
         const loadedUser = new User(localUserData.email, localUserData.id, localUserData._token, new Date(localUserData._tokenExpiringDate));
 
         if (loadedUser.token) {
-            this.user.next(loadedUser);
+            // this.user.next(loadedUser); // handling in ngrx
+            this.store.dispatch(new AuthActions.Login(loadedUser));
+
             // auto-logout when the user logs in
             const expirationDuration = new Date(localUserData._tokenExpiringDate).getTime() - new Date().getTime();
             this.autoLogout(expirationDuration);
@@ -73,7 +79,10 @@ export class AuthService {
         //generating an expiration date
         const expirationDate = new Date(new Date().getTime() + (expirseIn * 1000));
         const userData = new User(email, id, token, expirationDate);
-        this.user.next(userData);
+        /* Now handled by ngrx */
+        // this.user.next(userData);
+        this.store.dispatch(new AuthActions.Login(userData));
+
         // auto-logout when the user logs in
         this.autoLogout(expirseIn * 1000);  // converting sec to milisec
 
@@ -102,7 +111,9 @@ export class AuthService {
     }
 
     logout() {
-        this.user.next(null);
+        // this.user.next(null); // handling this via ngrx
+        this.store.dispatch(new AuthActions.Logout());
+
         // Clearing the local storage when user logout
         localStorage.removeItem('userData');
 
