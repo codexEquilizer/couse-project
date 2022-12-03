@@ -18,7 +18,8 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    user = new BehaviorSubject<User>(null); // Using BehaviorSubject to get the immediate access to the previously emitted value
+    /* This will be handled in ngrx */
+    //user = new BehaviorSubject<User>(null); // Using BehaviorSubject to get the immediate access to the previously emitted value
     tokenExpirationTimer: any;
 
     constructor(private http: HttpClient,
