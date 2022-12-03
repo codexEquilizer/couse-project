@@ -27,7 +27,20 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   editedItem: Ingredient;
 
   ngOnInit(): void {
-    this.subscription = this.shoppingService.startedEditing.subscribe(
+    this.subscription = this.store.select('shoppingList').subscribe(stateData => {
+      if (stateData.editedIngredientIndex > -1) {
+        this.editMode = true;
+        this.editedIndexItem = stateData.editedIngredientIndex;
+        this.editedItem = stateData.editedIngredient;
+        this.shoppingForm.setValue({
+          name: this.editedItem.name,
+          amount: this.editedItem.amount
+        })
+      }
+      else
+        this.editMode = false;
+    });
+    /* this.subscription = this.shoppingService.startedEditing.subscribe(
       (index: number) => {
         this.editedIndexItem = index;
         this.editMode = true;
@@ -37,7 +50,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
           amount: this.editedItem.amount
         })
       }
-    );
+    ); */
   }
 
   /* On clicking Update/Add button */
@@ -64,6 +77,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   onClear() {
     this.shoppingForm.reset();
     this.editMode = false;
+    this.store.dispatch(new ShoppingListActions.StopEdit());
   }
 
   /* On clicking delete button */
@@ -75,6 +89,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.store.dispatch(new ShoppingListActions.StopEdit());  // When we change the page while editing then we stop the editing so that we don't get a strange behavior when we next time visit the page or try to edit
   }
 
 }
